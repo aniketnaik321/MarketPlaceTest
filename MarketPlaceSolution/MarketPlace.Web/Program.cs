@@ -1,3 +1,8 @@
+using ApiHub.Service.Services;
+using MarketPlace.Web.Service;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +11,16 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+//Cors
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder => builder.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader());
+});
+builder.Services.AddScoped<IDbService, DbService>();
 
 var app = builder.Build();
 
@@ -19,6 +34,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseCors();
 
 app.MapControllers();
 
